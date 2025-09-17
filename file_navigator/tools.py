@@ -49,8 +49,11 @@ def show_input_panel(window, caption, initial_text, on_done, on_change = None, o
   sublime.set_timeout(lambda: window.show_input_panel(caption, initial_text, on_done, on_change, on_cancel), 0)
 
 
-def show_quick_panel(window, items, on_done, selected_index = -1):
-  sublime.set_timeout(lambda: window.show_quick_panel(items, on_done, sublime.MONOSPACE_FONT, selected_index), 0)
+def show_quick_panel(window, items, on_done, selected_index = -1, want_event = False):
+  flags = sublime.MONOSPACE_FONT
+  if want_event:
+    flags |= 4  # WANT_EVENT flag
+  sublime.set_timeout(lambda: window.show_quick_panel(items, on_done, flags, selected_index), 0)
 
 
 def history_items():

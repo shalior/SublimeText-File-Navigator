@@ -148,7 +148,7 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		# Set current working directory
 		self.cls.cwd = path
 
-		def on_done(i):
+		def on_done(i, event=None):
 			if i < 0:
 				if not self.cls.keep_settings:
 					self.cls.reset()
@@ -165,10 +165,16 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 			elif items[i]["is_dir"]:
 				self.navigator(items[i]["path"])
 			else:
-				self.do_file(items[i]["path"])
+				# Check if Shift key was pressed
+				if event and event.get('modifier_keys', {}).get('shift'):
+					# Show menu on Shift+Enter
+					self.do_file(items[i]["path"])
+				else:
+					# Open file directly on regular Enter
+					self.do_open(items[i]["path"])
 
 		if items:
-			show_quick_panel(self.window, [item["name"] for item in items], on_done)
+			show_quick_panel(self.window, [item["name"] for item in items], on_done, want_event=True)
 		else:
 			sublime.status_message("No Items in %s!!!" % path)
 
