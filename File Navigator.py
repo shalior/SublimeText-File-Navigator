@@ -70,7 +70,13 @@ class FileNavigatorCommand(sublime_plugin.WindowCommand):
 		self.item_buffer = []
 
 		if not path:
-			self.choose_root()
+			# Get the current file's folder by default
+			view = self.window.active_view()
+			if view and view.file_name():
+				path = os.path.dirname(view.file_name())
+				self.navigator(path)
+			else:
+				self.choose_root()
 		elif do_dir:
 			self.do_dictionary(path)
 		else:
